@@ -5,7 +5,23 @@ import { registerUser } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
 import { underControl } from '../../../redux/userRelated/userSlice';
 import { getAllSclasses } from '../../../redux/sclassRelated/sclassHandle';
-import { CircularProgress } from '@mui/material';
+import { 
+  CircularProgress, 
+  Paper, 
+  Typography, 
+  TextField, 
+  Button, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  Container, 
+  Box, 
+  Divider,
+  InputAdornment,
+  IconButton
+} from '@mui/material';
+import { Person, School, Numbers, Key, Visibility, VisibilityOff } from '@mui/icons-material';
 
 const AddStudent = ({ situation }) => {
     const dispatch = useDispatch()
@@ -21,6 +37,7 @@ const AddStudent = ({ situation }) => {
     const [password, setPassword] = useState('')
     const [className, setClassName] = useState('')
     const [sclassName, setSclassName] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
 
     const adminID = currentUser._id
     const role = "Student"
@@ -29,8 +46,14 @@ const AddStudent = ({ situation }) => {
     useEffect(() => {
         if (situation === "Class") {
             setSclassName(params.id);
+            const selectedClass = sclassesList.find(
+                (classItem) => classItem._id === params.id
+            );
+            if (selectedClass) {
+                setClassName(selectedClass.sclassName);
+            }
         }
-    }, [params.id, situation]);
+    }, [params.id, situation, sclassesList]);
 
     const [showPopup, setShowPopup] = useState(false);
     const [message, setMessage] = useState("");
@@ -41,8 +64,8 @@ const AddStudent = ({ situation }) => {
     }, [adminID, dispatch]);
 
     const changeHandler = (event) => {
-        if (event.target.value === 'Select Class') {
-            setClassName('Select Class');
+        if (event.target.value === '') {
+            setClassName('');
             setSclassName('');
         } else {
             const selectedClass = sclassesList.find(
@@ -58,7 +81,7 @@ const AddStudent = ({ situation }) => {
     const submitHandler = (event) => {
         event.preventDefault()
         if (sclassName === "") {
-            setMessage("Please select a classname")
+            setMessage("Please select a class")
             setShowPopup(true)
         }
         else {
@@ -66,6 +89,10 @@ const AddStudent = ({ situation }) => {
             dispatch(registerUser(fields, role))
         }
     }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     useEffect(() => {
         if (status === 'added') {
@@ -85,58 +112,129 @@ const AddStudent = ({ situation }) => {
     }, [status, navigate, error, response, dispatch]);
 
     return (
-        <>
-            <div className="register">
-                <form className="registerForm" onSubmit={submitHandler}>
-                    <span className="registerTitle">Add Student</span>
-                    <label>Name</label>
-                    <input className="registerInput" type="text" placeholder="Enter student's name..."
+        <Container maxWidth="sm" sx={{ py: 4 }}>
+            <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+                <Box component="form" onSubmit={submitHandler} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <Box sx={{ textAlign: 'center', mb: 2 }}>
+                        <Typography variant="h5" component="h1" fontWeight="bold" color="primary">
+                            Add New Student
+                        </Typography>
+                        <Divider sx={{ mt: 2 }} />
+                    </Box>
+
+                    <TextField
+                        label="Student Name"
+                        variant="outlined"
+                        fullWidth
                         value={name}
-                        onChange={(event) => setName(event.target.value)}
-                        autoComplete="name" required />
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Enter student's full name"
+                        required
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Person color="primary" />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                    {
-                        situation === "Student" &&
-                        <>
-                            <label>Class</label>
-                            <select
-                                className="registerInput"
+                    {situation === "Student" && (
+                        <FormControl fullWidth required>
+                            <InputLabel>Class</InputLabel>
+                            <Select
                                 value={className}
-                                onChange={changeHandler} required>
-                                <option value='Select Class'>Select Class</option>
-                                {sclassesList.map((classItem, index) => (
-                                    <option key={index} value={classItem.sclassName}>
+                                onChange={changeHandler}
+                                label="Class"
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <School color="primary" />
+                                    </InputAdornment>
+                                }
+                            >
+                                <MenuItem value="">
+                                    <em>Select a class</em>
+                                </MenuItem>
+                                {sclassesList.map((classItem) => (
+                                    <MenuItem key={classItem._id} value={classItem.sclassName}>
                                         {classItem.sclassName}
-                                    </option>
+                                    </MenuItem>
                                 ))}
-                            </select>
-                        </>
-                    }
+                            </Select>
+                        </FormControl>
+                    )}
 
-                    <label>Roll Number</label>
-                    <input className="registerInput" type="number" placeholder="Enter student's Roll Number..."
+                    <TextField
+                        label="Roll Number"
+                        variant="outlined"
+                        fullWidth
+                        type="number"
                         value={rollNum}
-                        onChange={(event) => setRollNum(event.target.value)}
-                        required />
+                        onChange={(e) => setRollNum(e.target.value)}
+                        placeholder="Enter student's roll number"
+                        required
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Numbers color="primary" />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                    <label>Password</label>
-                    <input className="registerInput" type="password" placeholder="Enter student's password..."
+                    <TextField
+                        label="Password"
+                        variant="outlined"
+                        fullWidth
+                        type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        autoComplete="new-password" required />
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Create a secure password"
+                        required
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Key color="primary" />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={togglePasswordVisibility}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                    <button className="registerButton" type="submit" disabled={loader}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        disabled={loader}
+                        sx={{ 
+                            mt: 2, 
+                            py: 1.5,
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            fontSize: '1rem'
+                        }}
+                    >
                         {loader ? (
                             <CircularProgress size={24} color="inherit" />
                         ) : (
-                            'Add'
+                            'Add Student'
                         )}
-                    </button>
-                </form>
-            </div>
+                    </Button>
+                </Box>
+            </Paper>
             <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-        </>
-    )
-}
+        </Container>
+    );
+};
 
-export default AddStudent
+export default AddStudent;

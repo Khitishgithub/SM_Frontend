@@ -53,6 +53,7 @@ export const PurpleButton = styled(Button)`
   && {
     background-color: #270843;
     color: #fff;
+    
     &:hover {
       background-color: #3f1068;
     }

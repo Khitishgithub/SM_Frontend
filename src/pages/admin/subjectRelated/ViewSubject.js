@@ -66,6 +66,7 @@ const ViewSubject = () => {
         </BlueButton>
         <PurpleButton
           variant="contained"
+        
           onClick={() =>
             navigate(`/Admin/subject/student/attendance/${row.id}/${subjectID}`)
           }
