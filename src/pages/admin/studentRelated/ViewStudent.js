@@ -21,7 +21,7 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
 
 const ViewStudent = () => {
-    const [showTab, setShowTab] = useState(false);
+   
 
     const navigate = useNavigate()
     const params = useParams()
@@ -90,16 +90,7 @@ const ViewStudent = () => {
         }
     }, [userDetails]);
 
-    const submitHandler = (event) => {
-        event.preventDefault()
-        dispatch(updateUser(fields, studentID, address))
-            .then(() => {
-                dispatch(getUserDetails(studentID, address));
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+   
 
     const deleteHandler = () => {
         setMessage("Sorry the delete function has been disabled for now.")
