@@ -105,7 +105,7 @@ const ClassDetails = () => {
         return (
             <>
                 {response ?
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px',marginRight:'10px' }}>
                         <GreenButton
                             variant="contained"
                             onClick={() => navigate("/Admin/addsubject/" + classID)}
@@ -180,7 +180,7 @@ const ClassDetails = () => {
             <>
                 {getresponse ? (
                     <>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px',marginRight:'10px' }}>
                             <GreenButton
                                 variant="contained"
                                 onClick={() => navigate("/Admin/class/addstudents/" + classID)}

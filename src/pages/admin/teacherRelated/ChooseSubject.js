@@ -37,7 +37,7 @@ const ChooseSubject = ({ situation }) => {
     } else if (response) {
         return <div>
             <h1>Sorry all subjects have teachers assigned already</h1>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px',marginRight:'10px' }}>
                 <PurpleButton variant="contained"
                     onClick={() => navigate("/Admin/addsubject/" + classID)}>
                     Add Subjects
